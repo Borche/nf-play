@@ -17,6 +17,9 @@ export default function Home() {
       <h2>
         <Link href="/admin">Admin</Link>
       </h2>
+      <h2>
+        <Link href="/dictionary">Dictionary</Link>
+      </h2>
       <div>
         {userLoading ? "Loading userage..." : <SignInPanel user={user} username={username} admin={admin}></SignInPanel>}
       </div>
