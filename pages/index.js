@@ -1,4 +1,3 @@
-import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import { auth, googleAuthProvider, signInWithPopup } from "@lib/firebase";
 import { UserContext } from "@lib/context";
@@ -9,21 +8,12 @@ export default function Home() {
   const { user, username, admin, userLoading } = useContext(UserContext);
 
   return (
-    <div className={styles.container}>
+    <>
       <h1>Home</h1>
-      <h2>
-        <Link href="/lessons">Lessons</Link>
-      </h2>
-      <h2>
-        <Link href="/admin">Admin</Link>
-      </h2>
-      <h2>
-        <Link href="/dictionary">Dictionary</Link>
-      </h2>
       <div>
         {userLoading ? "Loading userage..." : <SignInPanel user={user} username={username} admin={admin}></SignInPanel>}
       </div>
-    </div>
+    </>
   );
 }
 

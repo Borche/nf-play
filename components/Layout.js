@@ -1,16 +1,12 @@
 import styles from "./Layout.module.css";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ({ children }) {
   return (
     <div className={styles.container}>
-      <h1>
-        <Link href="/">
-          <a>Navbar</a>
-        </Link>
-      </h1>
-      <hr />
-      <main>{children}</main>
+      <Navbar />
+      <main className={styles.main}>{children}</main>
       <hr />
       <h2>
         <Link href="/">
@@ -18,5 +14,32 @@ export default function ({ children }) {
         </Link>
       </h2>
     </div>
+  );
+}
+
+function Navbar() {
+  return (
+    <nav className={styles.navbar}>
+      <Link href="/">
+        <a>
+          <Image src="/logo.svg" alt="logo" height={60} width={144} />
+        </a>
+      </Link>
+      <Link href="/lessons">
+        <a>
+          <span>Lessons</span>
+        </a>
+      </Link>
+      <Link href="/dictionary">
+        <a>
+          <span>Dictionary</span>
+        </a>
+      </Link>
+      <Link href="/dictionary">
+        <a>
+          <span>Login</span>
+        </a>
+      </Link>
+    </nav>
   );
 }
