@@ -6,62 +6,79 @@ import { db } from "@lib/firebase";
 import ReactMarkdown from "react-markdown";
 import { useForm } from "react-hook-form";
 import styles from "../admin.module.css";
+import toast from "react-hot-toast";
 
 export default function ManageLessonPage() {
-  const router = useRouter();
   const [lesson, setLesson] = useState({});
-  const [docRef, setDocRef] = useState(null);
+  const router = useRouter();
   const slug = router.query.slug;
 
   const getLessonData = async (slug) => {
-    const docRef = doc(db, "lessons", slug);
-    const docSnap = await getDoc(docRef);
+    try {
+      const docRef = doc(db, "lessons", slug);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      console.log("Data", docSnap.data());
-      setLesson(docSnap.data());
-      setDocRef(docRef);
+      if (docSnap.exists()) {
+        console.log("Lesson", docSnap.data());
+        setLesson(docSnap.data());
+      }
+    } catch (err) {
+      console.error("Fetching lesson error", err);
     }
   };
 
-  if (slug && (!lesson || !lesson.slug)) {
+  if (slug && !lesson.slug) {
     getLessonData(slug);
   }
 
-  return (
-    <AdminContent>
-      <h1>Manage Lesson Page</h1>
-      <h2>{lesson.title}</h2>
-      <h3>Slug: {lesson.slug}</h3>
-      <LessonContent defaultValues={lesson} lessonRef={docRef} />
-    </AdminContent>
-  );
+  return <AdminContent>{lesson.slug ? <LessonEditor lesson={lesson} /> : "Loading lesson..."}</AdminContent>;
 }
 
-function LessonContent({ defaultValues, lessonRef }) {
-  console.log("LessonRef", lessonRef);
+function LessonEditor({ lesson }) {
   const {
     register,
     handleSubmit,
     reset,
     watch,
     formState: { isDirty, isValid, errors },
-  } = useForm({ defaultValues, mode: "onChange" });
+  } = useForm({ defaultValues: lesson, mode: "onChange" });
 
   const updateLesson = async ({ content, published }) => {
     try {
-      await updateDoc(lessonRef, {
+      const docRef = doc(db, "lessons", lesson.slug);
+      await updateDoc(docRef, {
         content,
         published,
         updatedAt: serverTimestamp(),
       });
+
+      reset({ content, published });
+
+      toast.success("Lesson updated successfully!");
     } catch (err) {
-      console.error("Andreas error", err);
+      console.error("Update lesson error", err);
+
+      toast.error("Error updating lesson!");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(updateLesson)}>
+    <>
+      <h1>Manage Lesson Page</h1>
+      <h2>{lesson.title}</h2>
+      <h3>Slug: {lesson.slug}</h3>
+
+      <form onSubmit={handleSubmit(updateLesson)}>
+        <LessonContent register={register} errors={errors} content={lesson.content} />
+        <ButtonBar isDirty={isDirty} isValid={isValid} />
+      </form>
+    </>
+  );
+}
+
+function LessonContent({ errors, register }) {
+  return (
+    <>
       <textarea
         name="content"
         {...register("content", {
@@ -80,14 +97,18 @@ function LessonContent({ defaultValues, lessonRef }) {
           Published
         </label>
       </fieldset>
+    </>
+  );
+}
 
-      <div className={styles.buttonBar}>
-        <button type="submit" className="btn-green" disabled={!isDirty || !isValid}>
-          Save Changes
-        </button>
-        <button className="btn-blue">Preview</button>
-        <button className="btn-yellow">Live</button>
-      </div>
-    </form>
+function ButtonBar({ isDirty, isValid }) {
+  return (
+    <div className={styles.buttonBar}>
+      <button type="submit" className="btn-green" disabled={!isDirty || !isValid}>
+        Save Changes
+      </button>
+      <button className="btn-blue">Preview</button>
+      <button className="btn-yellow">Live</button>
+    </div>
   );
 }
