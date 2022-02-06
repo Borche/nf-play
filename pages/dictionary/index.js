@@ -26,7 +26,7 @@ export default function DictionaryPage({}) {
       <>
         <h1>Dictionary Page</h1>
         <div>
-          Search <input name="q" type="text" value={formValue} onChange={search} autocomplete="off"></input>
+          Search <input name="q" type="text" value={formValue} onChange={search} autoComplete="off"></input>
         </div>
         <div>Word: {word}</div>
       </>
