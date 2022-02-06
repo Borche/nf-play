@@ -1,0 +1,19 @@
+.lessonTitleInput {
+  margin-top: 0.4rem;
+}
+
+.buttonBar {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.buttonBar button:not(:first-child) {
+  margin-left: 0.6rem;
+}
+
+.checkbox {
+  display: inline;
+  width: auto;
+}
