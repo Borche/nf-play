@@ -42,6 +42,7 @@ function LessonEditor({ lesson }) {
     watch,
     formState: { isDirty, isValid, errors },
   } = useForm({ defaultValues: lesson, mode: "onChange" });
+  const [preview, setPreview] = useState(false);
 
   const updateLesson = async ({ content, published }) => {
     try {
@@ -69,8 +70,19 @@ function LessonEditor({ lesson }) {
       <h3>Slug: {lesson.slug}</h3>
 
       <form onSubmit={handleSubmit(updateLesson)}>
-        <LessonContent register={register} errors={errors} content={lesson.content} />
-        <ButtonBar isDirty={isDirty} isValid={isValid} />
+        {preview && (
+          <div className="card">
+            <ReactMarkdown>{watch("content")}</ReactMarkdown>
+          </div>
+        )}
+
+        {!preview && <LessonContent register={register} errors={errors} content={lesson.content} />}
+        <ButtonBar
+          isDirty={isDirty}
+          isValid={isValid}
+          preview={preview}
+          togglePreview={() => setPreview(!preview)}
+        />
       </form>
     </>
   );
@@ -101,14 +113,20 @@ function LessonContent({ errors, register }) {
   );
 }
 
-function ButtonBar({ isDirty, isValid }) {
+function ButtonBar({ isDirty, isValid, preview, togglePreview }) {
   return (
     <div className={styles.buttonBar}>
-      <button type="submit" className="btn-green" disabled={!isDirty || !isValid}>
-        Save Changes
+      {!preview && (
+        <button type="submit" className="btn-green" disabled={!isDirty || !isValid}>
+          Save Changes
+        </button>
+      )}
+      <button type="button" className="btn-blue" onClick={togglePreview}>
+        {preview ? "Edit" : "Preview"}
       </button>
-      <button className="btn-blue">Preview</button>
-      <button className="btn-yellow">Live</button>
+      <button type="button" className="btn-yellow">
+        Live view
+      </button>
     </div>
   );
 }
