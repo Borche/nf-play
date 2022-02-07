@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import { useForm } from "react-hook-form";
 import styles from "../admin.module.css";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function ManageLessonPage() {
   const [lesson, setLesson] = useState({});
@@ -65,7 +66,9 @@ function LessonEditor({ lesson }) {
 
   return (
     <>
-      <h1>Manage Lesson Page</h1>
+      <Link href="/admin">
+        <a>Back to lessons</a>
+      </Link>
       <h2>{lesson.title}</h2>
       <h3>Slug: {lesson.slug}</h3>
 
@@ -106,7 +109,7 @@ function LessonContent({ errors, register }) {
       <fieldset>
         <label>
           <input className={styles.checkbox} name="published" type="checkbox" {...register("published")} />
-          Published
+          &nbsp;Published
         </label>
       </fieldset>
     </>

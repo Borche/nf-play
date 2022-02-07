@@ -1,6 +1,9 @@
 input[type="text"] {
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 0.2rem 0.8rem 1rem;
   font-size: 2rem;
+  border: 2px solid rgb(67, 67, 67);
+  outline: none;
+  border-radius: 5px;
 }
 
 label {

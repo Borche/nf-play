@@ -17,3 +17,36 @@
   display: inline;
   width: auto;
 }
+
+.lessonItem {
+  padding: 0.2rem 1rem 0.2rem 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.headerTitle {
+  width: 30rem;
+  font-size: 2.1rem;
+}
+.colTitle {
+  width: 30rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.headerPublished {
+  width: 4rem;
+  font-size: 2.1rem;
+}
+.colPublished {
+  width: 4rem;
+}
+
+.headerLastUpdated {
+  font-size: 2.1rem;
+}
+.colLastUpdated {
+  font-style: italic;
+}

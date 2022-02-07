@@ -1,21 +1,24 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
+import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 
 import { UserContext } from "@lib/context";
 import { auth, serverTimestamp, db } from "@lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { query, orderBy, doc, setDoc, getDocs, collection } from "firebase/firestore";
 import AdminContent from "@components/AdminContent";
 import styles from "./admin.module.css";
 import kebabCase from "lodash.kebabcase";
 import toast from "react-hot-toast";
+import { format, formatDistance } from "date-fns";
 
 export default function AdminPage({}) {
   return (
     <AdminContent>
       <main>
-        <h1>Admin Page</h1>
         <CreateNewLesson />
+        <br />
+        <AllLessons />
       </main>
     </AdminContent>
   );
@@ -49,7 +52,7 @@ function CreateNewLesson() {
 
     await setDoc(ref, data);
 
-    toast.success("YEAH! Lesson created!");
+    toast.success(`Lesson "${title}" created!`);
 
     router.push(`/admin/lessons/${slug}`);
   };
@@ -73,5 +76,56 @@ function CreateNewLesson() {
         Create New Lesson
       </button>
     </form>
+  );
+}
+
+function AllLessons() {
+  const [lessons, setLessons] = useState([]);
+  const [fetched, setFetched] = useState(false);
+
+  const getAllLessons = async () => {
+    const snapshot = await getDocs(query(collection(db, "lessons"), orderBy("updatedAt", "desc")));
+    const allLessons = snapshot.docs.map((lesson) => lesson.data());
+    console.log(allLessons);
+    setLessons(allLessons);
+  };
+
+  if (!fetched) {
+    setFetched(true);
+    getAllLessons();
+  }
+
+  return (
+    <>
+      <h2>All lessons</h2>
+      <ul>
+        {/* Some headers for our "table" */}
+        <li class={styles.lessonItem}>
+          <span className={styles.headerPublished}></span>
+          <span className={styles.headerTitle}>Title</span>
+          <span className={styles.headerLastUpdated}>Last updated</span>
+        </li>
+
+        {lessons.map((lesson) => (
+          <li className={styles.lessonItem}>
+            <span className={styles.colPublished}>
+              {lesson.published ? (
+                <FaRegCheckCircle style={{ color: "#2cbd72", fontSize: "2.4rem" }} />
+              ) : (
+                <FaRegTimesCircle style={{ color: "#eb9696", fontSize: "2.4rem" }} />
+              )}
+            </span>
+
+            <Link href={`/admin/lessons/${lesson.slug}`}>
+              <a className={styles.colTitle}>{lesson.title}</a>
+            </Link>
+
+            <span className={styles.colLastUpdated}>
+              {formatDistance(lesson.updatedAt.toDate(), new Date(), { addSuffix: true })}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
