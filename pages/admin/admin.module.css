@@ -26,11 +26,11 @@
 }
 
 .headerTitle {
-  width: 30rem;
+  width: 25rem;
   font-size: 2.1rem;
 }
 .colTitle {
-  width: 30rem;
+  width: 25rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -46,7 +46,24 @@
 
 .headerLastUpdated {
   font-size: 2.1rem;
+  width: 22rem;
 }
 .colLastUpdated {
+  font-size: 1.5rem;
   font-style: italic;
+  width: 22rem;
+}
+
+.headerCreated {
+  font-size: 2.1rem;
+  width: 22rem;
+}
+.colCreated {
+  font-size: 1.5rem;
+  font-style: italic;
+  width: 22rem;
+}
+
+.weakText {
+  color: grey;
 }

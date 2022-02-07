@@ -104,6 +104,7 @@ function AllLessons() {
           <span className={styles.headerPublished}></span>
           <span className={styles.headerTitle}>Title</span>
           <span className={styles.headerLastUpdated}>Last updated</span>
+          <span className={styles.headerCreated}>Created</span>
         </li>
 
         {lessons.map((lesson) => (
@@ -121,7 +122,13 @@ function AllLessons() {
             </Link>
 
             <span className={styles.colLastUpdated}>
-              {formatDistance(lesson.updatedAt.toDate(), new Date(), { addSuffix: true })}
+              {formatDistance(lesson.updatedAt.toDate(), new Date(), { addSuffix: true })} by
+              <span className={styles.weakText}> {lesson.createdByUsername}</span>
+            </span>
+
+            <span className={styles.colCreated}>
+              {formatDistance(lesson.createdAt.toDate(), new Date(), { addSuffix: true })} by
+              <span className={styles.weakText}> {lesson.createdByUsername}</span>
             </span>
           </li>
         ))}
