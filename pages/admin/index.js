@@ -42,12 +42,13 @@ function CreateNewLesson() {
       title,
       slug,
       published: false,
-      content: "# Counting from 1 to 10",
+      content: "# Title",
       createdByUid: uid,
       createdByUsername: username,
+      updatedByUid: uid,
+      updatedByUsername: username,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
-      heartCount: 0,
     };
 
     await setDoc(ref, data);
@@ -100,7 +101,7 @@ function AllLessons() {
       <h2>All lessons</h2>
       <ul>
         {/* Some headers for our "table" */}
-        <li class={styles.lessonItem}>
+        <li className={styles.lessonItem}>
           <span className={styles.headerPublished}></span>
           <span className={styles.headerTitle}>Title</span>
           <span className={styles.headerLastUpdated}>Last updated</span>
@@ -108,7 +109,7 @@ function AllLessons() {
         </li>
 
         {lessons.map((lesson) => (
-          <li className={styles.lessonItem}>
+          <li className={styles.lessonItem} key={lesson.slug}>
             <span className={styles.colPublished}>
               {lesson.published ? (
                 <FaRegCheckCircle style={{ color: "#2cbd72", fontSize: "2.4rem" }} />
@@ -123,12 +124,12 @@ function AllLessons() {
 
             <span className={styles.colLastUpdated}>
               {formatDistance(lesson.updatedAt.toDate(), new Date(), { addSuffix: true })} by
-              <span className={styles.weakText}> {lesson.createdByUsername}</span>
+              <span className={styles.username}> {lesson.createdByUsername}</span>
             </span>
 
             <span className={styles.colCreated}>
               {formatDistance(lesson.createdAt.toDate(), new Date(), { addSuffix: true })} by
-              <span className={styles.weakText}> {lesson.createdByUsername}</span>
+              <span className={styles.username}> {lesson.createdByUsername}</span>
             </span>
           </li>
         ))}
