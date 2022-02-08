@@ -42,7 +42,7 @@ function CreateNewLesson() {
       title,
       slug,
       published: false,
-      content: "# Title",
+      content: "# Example title",
       createdByUid: uid,
       createdByUsername: username,
       updatedByUid: uid,
