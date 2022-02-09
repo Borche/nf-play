@@ -7,12 +7,11 @@ export default function Layout({ children }) {
     <div className={styles.container}>
       <Navbar />
       <main className={styles.main}>{children}</main>
-      <hr />
-      <h2>
-        <Link href="/">
-          <a>Footer</a>
-        </Link>
-      </h2>
+      <Footer />
     </div>
   );
+}
+
+function Footer() {
+  return <footer className={styles.footer}>2022 &copy; Nf-Play</footer>;
 }
