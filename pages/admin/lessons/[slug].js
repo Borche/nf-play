@@ -45,16 +45,17 @@ function LessonEditor({ lesson }) {
   } = useForm({ defaultValues: lesson, mode: "onChange" });
   const [preview, setPreview] = useState(false);
 
-  const updateLesson = async ({ content, published }) => {
+  const updateLesson = async ({ content, published, premium }) => {
     try {
       const docRef = doc(db, "lessons", lesson.slug);
       await updateDoc(docRef, {
         content,
         published,
+        premium,
         updatedAt: serverTimestamp(),
       });
 
-      reset({ content, published });
+      reset({ content, published, premium });
 
       toast.success("Lesson updated successfully!");
     } catch (err) {
@@ -106,7 +107,11 @@ function LessonContent({ errors, register }) {
 
       {errors.content && <p className="text-danger">Validation error: {errors.content.message}</p>}
 
-      <fieldset>
+      <fieldset className={styles.checkboxBar}>
+        <label>
+          <input className={styles.checkbox} name="premium" type="checkbox" {...register("premium")} />
+          &nbsp;Premium
+        </label>
         <label>
           <input className={styles.checkbox} name="published" type="checkbox" {...register("published")} />
           &nbsp;Published

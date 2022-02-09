@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa";
+import { FaRegCheckCircle, FaRegTimesCircle, FaDollarSign } from "react-icons/fa";
 
 import { UserContext } from "@lib/context";
 import { auth, serverTimestamp, db } from "@lib/firebase";
@@ -42,6 +42,7 @@ function CreateNewLesson() {
       title,
       slug,
       published: false,
+      premium: true,
       content: "# Example title",
       createdByUid: uid,
       createdByUsername: username,
@@ -106,6 +107,7 @@ function AllLessons() {
           <span className={styles.headerTitle}>Title</span>
           <span className={styles.headerLastUpdated}>Last updated</span>
           <span className={styles.headerCreated}>Created</span>
+          <span className={styles.headerPremium}>Premium</span>
         </li>
 
         {lessons.map((lesson) => (
@@ -130,6 +132,10 @@ function AllLessons() {
             <span className={styles.colCreated}>
               {formatDistance(lesson.createdAt.toDate(), new Date(), { addSuffix: true })} by
               <span className={styles.username}> {lesson.createdByUsername}</span>
+            </span>
+
+            <span className={styles.colPremium}>
+              {lesson.premium && <FaDollarSign style={{ color: "#359315", fontSize: "2rem" }} />}
             </span>
           </li>
         ))}

@@ -17,3 +17,7 @@ h3 {
   color: red;
   font-weight: bold;
 }
+
+p {
+  margin-bottom: 2rem;
+}
