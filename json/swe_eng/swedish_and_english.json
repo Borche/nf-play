@@ -1,0 +1,60 @@
+{
+  "value": "dessert",
+  "english": {
+    "meanings": [
+      {
+        "type": "noun",
+        "swedishTranslations": [
+          {
+            "value": "dessert",
+            "conjugations": {
+              "singular": "en dessert",
+              "plural": "desserter",
+              "singular_det": "desserten",
+              "plural_det": "desserterna"
+            },
+            "examples": [
+              {
+                "swedish": "Jag älskar denna desserten!",
+                "english": "I love this dessert!"
+              }
+            ]
+          },
+          {
+            "value": "efterätt",
+            "conjugations": {
+              "singular": "en efterrätt",
+              "plural": "efterrätter",
+              "singular_det": "efterrätten",
+              "plural_det": "efterrätterna"´´
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "swedish": {
+    "meanings": [
+      {
+        "type": "noun",
+        "conjugations": {
+          "singular": "en dessert",
+          "plural": "desserter",
+          "singular_det": "desserten",
+          "plural_det": "desserterna"
+        },
+        "englishTranslations": [
+          {
+            "value": "dessert",
+            "examples": [
+              {
+                "swedish": "Jag älskar denna desserten!",
+                "english": "I love this dessert!"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

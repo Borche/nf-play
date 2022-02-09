@@ -1,0 +1,48 @@
+{
+  "value": "däck",
+  "swedish": {
+    "meanings": [
+      {
+        "type": "noun",
+        "conjugations": {
+          "singular": "ett däck",
+          "plural": "däcket",
+          "singular_det": "däck",
+          "plural_det": "däcken"
+        },
+        "englishTranslations": [
+          {
+            "value": "tire",
+            "also": ["tyre"],
+            "examples": [
+              {
+                "swedish": "Min bil har fyra däck.",
+                "english": "My car has four tires."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "noun",
+        "conjugations": {
+          "singular": "ett däck",
+          "plural": "däcket",
+          "singular_det": "däck",
+          "plural_det": "däcken"
+        },
+        "englishTranslations": [
+          {
+            "value": "deck",
+            "examples": [
+              {
+                "swedish": "Uppe på däck kan man se havet.",
+                "english": "Up on deck you can see the ocean."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

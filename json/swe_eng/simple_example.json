@@ -1,0 +1,27 @@
+{
+  "value": "house",
+  "english": {
+    "meanings": [
+      {
+        "type": "noun",
+        "swedishTranslations": [
+          {
+            "value": "hus",
+            "conjugations": {
+              "singular": "ett hus",
+              "plural": "två hus",
+              "singular_det": "huset",
+              "plural_det": "husen"
+            },
+            "examples": [
+              {
+                "swedish": "Det här är mitt hus",
+                "english": "This is my house"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
