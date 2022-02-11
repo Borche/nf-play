@@ -31,7 +31,6 @@ function AllLessons({ lessons }) {
       query(collection(db, "lessons"), where("premium", "==", true), orderBy("updatedAt", "desc"))
     );
     const allLessons = snapshot.docs.map((lesson) => lesson.data());
-    console.log(allLessons);
     setPremiumLessons(allLessons);
   };
 

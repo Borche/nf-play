@@ -1,4 +1,5 @@
-import { db, auth, googleAuthProvider, signInWithPopup } from "@lib/firebase";
+import { db, auth, googleAuthProvider, signInWithPopup, uiConfig } from "@lib/firebase";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { UserContext } from "@lib/context";
 import { useContext, useState, useCallback, useEffect } from "react";
 import { doc, getDoc, writeBatch } from "firebase/firestore";
@@ -14,7 +15,9 @@ export default function EnterPage() {
         {userLoading ? (
           "Loading userage..."
         ) : (
-          <SignInPanel user={user} username={username} admin={admin}></SignInPanel>
+          <>
+            <SignInPanel user={user} username={username} admin={admin}></SignInPanel>
+          </>
         )}
       </div>
     </>
@@ -34,7 +37,12 @@ function SignInPanel({ user, username, admin }) {
   } else if (user) {
     panel = <UsernameForm />;
   } else {
-    panel = <button onClick={signInWithGoogle}>Sign in with Google</button>;
+    panel = (
+      <>
+        <button onClick={signInWithGoogle}>Sign in with Google</button>;
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+      </>
+    );
   }
 
   return panel;
