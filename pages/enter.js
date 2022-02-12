@@ -1,9 +1,16 @@
-import { db, auth, googleAuthProvider, signInWithPopup, uiConfig } from "@lib/firebase";
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import { UserContext } from "@lib/context";
-import { useContext, useState, useCallback, useEffect } from "react";
-import { doc, getDoc, writeBatch } from "firebase/firestore";
-import debounce from "lodash.debounce";
+import {
+  db,
+  auth,
+  googleAuthProvider,
+  signInWithPopup,
+  facebookAuthProvider,
+  uiConfig
+} from '@lib/firebase';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { UserContext } from '@lib/context';
+import { useContext, useState, useCallback, useEffect } from 'react';
+import { doc, getDoc, writeBatch } from 'firebase/firestore';
+import debounce from 'lodash.debounce';
 
 export default function EnterPage() {
   const { user, username, admin, userLoading } = useContext(UserContext);
@@ -13,7 +20,7 @@ export default function EnterPage() {
       <h1>Sign in</h1>
       <div>
         {userLoading ? (
-          "Loading userage..."
+          'Loading userage...'
         ) : (
           <>
             <SignInPanel user={user} username={username} admin={admin}></SignInPanel>
@@ -29,6 +36,10 @@ function SignInPanel({ user, username, admin }) {
     const result = await signInWithPopup(auth, googleAuthProvider);
   };
 
+  const signInWithFacebook = async () => {
+    const result = await signInWithPopup(auth, facebookAuthProvider);
+  };
+
   let panel;
   if (user && username && admin) {
     panel = <h2>Logged in as Admin</h2>;
@@ -40,6 +51,7 @@ function SignInPanel({ user, username, admin }) {
     panel = (
       <>
         <button onClick={signInWithGoogle}>Sign in with Google</button>;
+        <button onClick={signInWithFacebook}>Sign in with Facebook</button>;
         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       </>
     );
@@ -50,13 +62,13 @@ function SignInPanel({ user, username, admin }) {
 
 // Username form
 function UsernameForm() {
-  const [formValue, setFormValue] = useState("");
+  const [formValue, setFormValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { user, username } = useContext(UserContext);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
 
     // Create refs for both documents
@@ -68,14 +80,14 @@ function UsernameForm() {
     batch.set(userDoc, {
       username: formValue,
       photoURL: user.photoURL,
-      displayName: user.displayName,
+      displayName: user.displayName
     });
     batch.set(usernameDoc, { uid: user.uid });
 
     await batch.commit();
   };
 
-  const onChange = (e) => {
+  const onChange = e => {
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase();
     const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
@@ -103,11 +115,11 @@ function UsernameForm() {
   // Hit the database for username match after each debounced change
   // useCallback is required for debounce to work
   const checkUsername = useCallback(
-    debounce(async (username) => {
+    debounce(async username => {
       if (username.length >= 3) {
         const ref = doc(db, `usernames/${username}`);
         const usernameDoc = await getDoc(ref);
-        console.log("Firestore read executed!");
+        console.log('Firestore read executed!');
         setIsValid(!usernameDoc.exists());
         setLoading(false);
       }
