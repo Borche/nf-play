@@ -1,12 +1,4 @@
-import {
-  db,
-  auth,
-  googleAuthProvider,
-  signInWithPopup,
-  facebookAuthProvider,
-  uiConfig
-} from '@lib/firebase';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import { db, auth, googleAuthProvider, signInWithPopup, facebookAuthProvider } from '@lib/firebase';
 import { UserContext } from '@lib/context';
 import { useContext, useState, useCallback, useEffect } from 'react';
 import { doc, getDoc, writeBatch } from 'firebase/firestore';
@@ -23,7 +15,12 @@ export default function EnterPage() {
           'Loading userage...'
         ) : (
           <>
-            <SignInPanel user={user} username={username} admin={admin}></SignInPanel>
+            <SignInPanel
+              user={user}
+              username={username}
+              admin={admin}
+              userLoading={userLoading}
+            ></SignInPanel>
           </>
         )}
       </div>
@@ -31,17 +28,29 @@ export default function EnterPage() {
   );
 }
 
-function SignInPanel({ user, username, admin }) {
+function SignInPanel({ user, username, admin, userLoading }) {
   const signInWithGoogle = async () => {
-    const result = await signInWithPopup(auth, googleAuthProvider);
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      console.log('Result', result);
+    } catch (err) {
+      console.error('Error signing in with Google', err);
+    }
   };
 
   const signInWithFacebook = async () => {
-    const result = await signInWithPopup(auth, facebookAuthProvider);
+    try {
+      const result = await signInWithPopup(auth, facebookAuthProvider);
+      console.log('Result', result);
+    } catch (err) {
+      console.error('Error signing in with Google', err);
+    }
   };
 
   let panel;
-  if (user && username && admin) {
+  if (userLoading) {
+    panel = <h3>Loading userage...</h3>;
+  } else if (user && username && admin) {
     panel = <h2>Logged in as Admin</h2>;
   } else if (user && username) {
     panel = <h2>Logged in as Premium User</h2>;
@@ -50,9 +59,8 @@ function SignInPanel({ user, username, admin }) {
   } else {
     panel = (
       <>
-        <button onClick={signInWithGoogle}>Sign in with Google</button>;
-        <button onClick={signInWithFacebook}>Sign in with Facebook</button>;
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
+        <button onClick={signInWithGoogle}>Sign in with Google</button>
+        <button onClick={signInWithFacebook}>Sign in with Facebook</button>
       </>
     );
   }
