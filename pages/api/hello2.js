@@ -1,15 +1,22 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 import { withAuth, db } from "@belib/firebaseAdmin";
+import { getOrCreateCustomer } from "@belib/customers";
 
 async function handler(req, res) {
-  console.log("req.currentUser: ", req.currentUser);
-  const user = await db.collection("users").doc("QPsRoUW1TQfKjYqlXXoFXwOceF02").get();
+  const { currentUser } = req;
 
-  if (!user.exists) {
+  const firebaseUser = await db.collection("users").doc(currentUser.uid).get();
+
+  if (!firebaseUser.exists) {
     return res.status(404).json({});
   }
 
-  return res.status(200).json({ id: user.id, ...user.data() });
+  const customer = getOrCreateCustomer(currentUser.uid);
+
+  return res.status(200).json({
+    firebaseUser: { ...firebaseUser.data() },
+    customer: { ...customer },
+    currentUser: { ...currentUser },
+  });
 }
 
 export default withAuth(handler);
