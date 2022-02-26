@@ -1,19 +1,21 @@
 import { auth, googleAuthProvider, signInWithPopup } from "@lib/firebase";
 import { UserContext } from "@lib/context";
 import { useContext } from "react";
+import { fetchFromAPI } from "@lib/helpers";
 
 export default function Checkout() {
   const { user, username, admin, userLoading } = useContext(UserContext);
 
-  const sendRequest = async () => {
-    const data = await fetch("/api/hello");
-    console.log(data.json());
+  const sendRequest = async (endpoint) => {
+    const data = await fetchFromAPI(`/api/${endpoint}`);
+    console.log(data);
   };
 
   return (
     <>
       <h1>Checkout</h1>
-      <button onClick={sendRequest}>Buy subscription</button>
+      <button onClick={() => sendRequest("/hello")}>Hello</button>
+      <button onClick={() => sendRequest("/hello2")}>Hello2</button>
     </>
   );
 }
