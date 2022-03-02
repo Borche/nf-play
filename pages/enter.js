@@ -1,8 +1,8 @@
-import { db, auth, googleAuthProvider, signInWithPopup, facebookAuthProvider } from '@lib/firebase';
-import { UserContext } from '@lib/context';
-import { useContext, useState, useCallback, useEffect } from 'react';
-import { doc, getDoc, writeBatch } from 'firebase/firestore';
-import debounce from 'lodash.debounce';
+import { db, auth, googleAuthProvider, signInWithPopup, facebookAuthProvider } from "@lib/firebase";
+import { UserContext } from "@lib/context";
+import { useContext, useState, useCallback, useEffect } from "react";
+import { doc, getDoc, writeBatch } from "firebase/firestore";
+import debounce from "lodash.debounce";
 
 export default function EnterPage() {
   const { user, username, admin, userLoading } = useContext(UserContext);
@@ -12,7 +12,7 @@ export default function EnterPage() {
       <h1>Sign in</h1>
       <div>
         {userLoading ? (
-          'Loading userage...'
+          "Loading userage..."
         ) : (
           <>
             <SignInPanel
@@ -32,18 +32,18 @@ function SignInPanel({ user, username, admin, userLoading }) {
   const signInWithGoogle = async () => {
     try {
       const result = await signInWithPopup(auth, googleAuthProvider);
-      console.log('Result', result);
+      console.log("Result", result);
     } catch (err) {
-      console.error('Error signing in with Google', err);
+      console.error("Error signing in with Google", err);
     }
   };
 
   const signInWithFacebook = async () => {
     try {
       const result = await signInWithPopup(auth, facebookAuthProvider);
-      console.log('Result', result);
+      console.log("Result", result);
     } catch (err) {
-      console.error('Error signing in with Google', err);
+      console.error("Error signing in with Google", err);
     }
   };
 
@@ -53,7 +53,13 @@ function SignInPanel({ user, username, admin, userLoading }) {
   } else if (user && username && admin) {
     panel = <h2>Logged in as Admin</h2>;
   } else if (user && username) {
-    panel = <h2>Logged in as Premium User</h2>;
+    panel = (
+      <>
+        <h2>Logged in as Premium User</h2>
+        <h3>Now choose your subscription</h3>
+        <SubscriptionChoice />
+      </>
+    );
   } else if (user) {
     panel = <UsernameForm />;
   } else {
@@ -68,34 +74,70 @@ function SignInPanel({ user, username, admin, userLoading }) {
   return panel;
 }
 
+function SubscriptionChoice() {
+  const onSubscriptionChange = (event) => {
+    console.log(event.target.value);
+  };
+
+  return (
+    <div>
+      <input
+        type="radio"
+        id="monthly"
+        value="monthly"
+        name="subscription-type"
+        defaultChecked
+        onChange={onSubscriptionChange}
+      ></input>
+      <label htmlFor="monthly">Monthly 19.99 EUR</label>
+      <br />
+      <br />
+      <input
+        type="radio"
+        id="yearly"
+        value="yearly"
+        name="subscription-type"
+        onChange={onSubscriptionChange}
+      ></input>
+      <label htmlFor="yearly">Yearly 139 EUR</label>
+      <br />
+      <br />
+      <button type="button">Continue</button>
+    </div>
+  );
+}
+
 // Username form
 function UsernameForm() {
-  const [formValue, setFormValue] = useState('');
+  const [formValue, setFormValue] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { user, username } = useContext(UserContext);
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     // Create refs for both documents
     const userDoc = doc(db, `users/${user.uid}`);
     const usernameDoc = doc(db, `usernames/${formValue}`);
+    const useremailDoc = doc(db, `useremails/${user.email}`);
 
     // Commit both docs together as a batch write.
     const batch = writeBatch(db);
     batch.set(userDoc, {
       username: formValue,
       photoURL: user.photoURL,
-      displayName: user.displayName
+      email: user.email,
+      displayName: user.displayName,
     });
     batch.set(usernameDoc, { uid: user.uid });
+    batch.set(useremailDoc, { uid: user.uid });
 
     await batch.commit();
   };
 
-  const onChange = e => {
+  const onChange = (e) => {
     // Force form value typed in form to match correct format
     const val = e.target.value.toLowerCase();
     const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
@@ -123,11 +165,11 @@ function UsernameForm() {
   // Hit the database for username match after each debounced change
   // useCallback is required for debounce to work
   const checkUsername = useCallback(
-    debounce(async username => {
+    debounce(async (username) => {
       if (username.length >= 3) {
         const ref = doc(db, `usernames/${username}`);
         const usernameDoc = await getDoc(ref);
-        console.log('Firestore read executed!');
+        console.log("Firestore read executed!");
         setIsValid(!usernameDoc.exists());
         setLoading(false);
       }
