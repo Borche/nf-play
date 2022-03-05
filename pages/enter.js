@@ -3,6 +3,7 @@ import { UserContext } from "@lib/context";
 import { useContext, useState, useCallback, useEffect } from "react";
 import { doc, getDoc, writeBatch } from "firebase/firestore";
 import debounce from "lodash.debounce";
+import { fetchFromAPI, fetchAndRedirectFromAPI } from "@lib/helpers";
 
 export default function EnterPage() {
   const { user, username, admin, userLoading } = useContext(UserContext);
@@ -75,8 +76,31 @@ function SignInPanel({ user, username, admin, userLoading }) {
 }
 
 function SubscriptionChoice() {
-  const onSubscriptionChange = (event) => {
-    console.log(event.target.value);
+  const [subscription, setSubscription] = useState("monthly");
+
+  const onSubscriptionChange = (e) => {
+    console.log(e.target.value);
+    setSubscription(e.target.value);
+  };
+
+  const doCheckout = async (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    const response = await fetchFromAPI("go-to-checkout", {
+      method: "POST",
+      body: {
+        subscription,
+      },
+    });
+    console.log(response);
+    if (response?.url) {
+      /* const { error } = await stripe.redirectToCheckout({
+        sessionId: response.sessionId,
+      });*/
+      window.location.href = response.url;
+    } else {
+      console.error("No session url from endpoint...!");
+    }
   };
 
   return (
@@ -102,7 +126,9 @@ function SubscriptionChoice() {
       <label htmlFor="yearly">Yearly 139 EUR</label>
       <br />
       <br />
-      <button type="button">Continue</button>
+      <button type="submit" onClick={doCheckout}>
+        Continue
+      </button>
     </div>
   );
 }
